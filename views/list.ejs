@@ -68,12 +68,13 @@
         url: '/delete',
         contentType: 'application/json',  // ✅ JSON 형식으로 전송
         data: JSON.stringify({ _id: sid }) // ✅ 문자열 변환
-    }).done(function() {
+    }).done(function(result) {
         //alert('삭제되었습니다.');
         //삭제 성공시 해당 엘리먼트 삭제
         item.parent('td').parent('tr').remove();
     }).fail(function(xhr, textStatus, errorThrown) {
-        alert('삭제 실패: ' + xhr.responseText);
+        console.log('삭제 실패: ');
+        console.log(xhr, textStatus, errorThrown);
     });
 
   });

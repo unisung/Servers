@@ -119,7 +119,10 @@ app.post("/delete", function(req, res){
   //삭제할 데이터의 _id값을 이용하여 삭제
   mydb.collection("post").deleteOne({_id:req.body._id}).then((result)=>{
     console.log("삭제완료", result);//4.삭제완료
+    //클라이언트에게 응답
+    res.status(200).send(); //ok
   }).catch((err)=>{
     console.log("삭제실패", err);
+    res.status(500).send(); //server error
   });
 });
