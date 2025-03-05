@@ -43,6 +43,9 @@ app.use(bodyParser.json()); //json 형식의 데이터를 받기 위한 설정
 
 app.set('view engine', 'ejs'); //ejs 뷰 엔진 사용
 
+//정적파일(css, js, image) 위치 설정 -> 아래 설정 후 static 폴더 생성하기
+app.use(express.static('public'));
+
 app.get('/book', function(req, res){
     res.send('도서 목록 관련 페이지입니다.');
 });
