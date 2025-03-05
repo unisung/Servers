@@ -205,9 +205,14 @@ app.get('/session', function(req, res){
 
 //로그인 폼페이지 요청
 app.get("/login", function(req, res){
-  console.log("로그인 페이지");
-  res.render('login.ejs');
+  if(req.session.userid){
+    console.log("세션 유지");
+    res.send("이미 로그인 되어있습니다.");
+  }else{
+    res.render("login.ejs"); //로그인 페이지로 이동
+  }
 });
+
 //로그인 처리 요청
 app.post("/login", function(req, res){
   console.log("아이디 :" + req.body.userid);
@@ -219,9 +224,17 @@ app.post("/login", function(req, res){
    if(!result){ // id에 해당하는 데이타가 없는 경우 null 처리
       res.send("아이디가 존재하지 않습니다.");
    }else if(result.userpw == req.body.userpw){ //id와 비번 둘다 맞는 경우
-    res.send("로그인 성공");
+    req.session.userid = req.body; //세션에 로그인 정보 저장
+    console.log('새로운 로그인')
+    res.send("로그인 되었습니다.");
    }else{
     res.send("비밀번호가 일치하지 않습니다."); //id는 맞고, 비번이 틀린 겨우
    }
  });
+});
+
+app.get("/logout", function(req, res){
+  console.log("로그아웃");
+  req.session.destroy(); //세션 삭제
+  res.redirect("/"); //메인페이지로 이동 (index.ejs)
 });
