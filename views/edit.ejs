@@ -36,6 +36,7 @@
     <form action="/edit" method="post">
      <div class="form-group">
         <label for="title">제목</label>
+        <input type="hidden" value="<%=data._id %>"  id="id" name="id" class="form-control">
         <input type="text" value="<%=data.title %>"  id="title" name="title" class="form-control">
      </div>
      <p></p>

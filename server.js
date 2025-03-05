@@ -152,3 +152,17 @@ app.get("/edit/:id", function(req, res){
      res.render('edit.ejs', {data:result});
    });
 });
+//수정처리
+app.post("/edit",function(req,res){
+  console.log(req.body);
+  req.body.id = new ObjId(req.body.id);
+  mydb.collection("post").updateOne(
+    {_id:req.body.id},
+    {$set:{title:req.body.title, content:req.body.content, date:req.body.someDate}}
+     ).then((result)=>{
+    console.log("수정완료", result);
+    res.redirect("/list"); //목록페이지로 이동
+  }).catch((err)=>{
+    console.log("수정실패", err);
+  });
+});
