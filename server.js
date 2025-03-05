@@ -43,7 +43,7 @@ app.use(bodyParser.json()); //json 형식의 데이터를 받기 위한 설정
 
 app.set('view engine', 'ejs'); //ejs 뷰 엔진 사용
 
-//정적파일(css, js, image) 위치 설정 -> 아래 설정 후 static 폴더 생성하기
+//정적파일(css, js, image) 위치 설정 -> 아래 설정 후static 폴더 생성하기
 app.use(express.static('public'));
 
 app.get('/book', function(req, res){
@@ -55,7 +55,8 @@ app.get('/welcome', function(req, res){
 
 
 app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
+    // res.sendFile(__dirname + '/index.html');
+    res.render('index.ejs');
 });
         
 //localhost:127.0.0.1:8080/list 요청에 대한 처리 루틴
