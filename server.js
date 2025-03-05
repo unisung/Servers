@@ -104,7 +104,10 @@ mydb.collection("post").insertOne(
 
 
     //결과를 클라이언트에게 응답
-    res.send("데이타 추가 성공");
+    // res.send("데이타 추가 성공");
+    res.redirect("/list"); //목록페이지로 이동
+    
+
 });
 
 //const ObjId = require('mongodb').ObjectId; 
