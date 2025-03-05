@@ -228,7 +228,7 @@ app.post("/login", function(req, res){
     req.session.userid = req.body; //세션에 로그인 정보 저장
     console.log('새로운 로그인')
     //res.send("로그인 되었습니다.");
-    res.render('index.ejs', {user : req.session.user});
+    res.render('index.ejs', {user : req.session.userid});
    }else{
     res.send("비밀번호가 일치하지 않습니다."); //id는 맞고, 비번이 틀린 겨우
    }
