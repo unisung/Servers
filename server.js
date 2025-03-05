@@ -173,3 +173,55 @@ app.post("/edit",function(req,res){
     console.log("수정실패", err);
   });
 });
+
+let cookieParser = require('cookie-parser');
+app.use(cookieParser('ncvka0e39842kpfd'));
+
+app.get('/cookie', function(req, res){
+  let milk = parseInt(req.signedCookies.milk)+ 1000;
+  if(isNaN(milk)){
+    milk=0;
+  }
+  //res.cookie('milk', '1000원'); //response객체에 실어서 브라우저로 전달
+  res.cookie('milk', milk, {signed : true }); //response객체에 실어서 브라우저로 전달
+  //res.send('product :' +req.cookies.milk);//요청을 받으면 request로 넘어옴
+  res.send("product : " + milk+"원");
+});
+
+let session = require('express-session');
+app.use(session({
+  secret : 'dkufe8938493j4e08349u',
+  resave : false,
+  saveUninitialized : true
+}));
+
+app.get('/session', function(req, res){
+  if(isNaN(req.session.milk)){
+    req.session.milk = 0;
+  }
+  req.session.milk += 1000;
+  res.send("product : " + req.session.milk+"원");
+});
+
+//로그인 폼페이지 요청
+app.get("/login", function(req, res){
+  console.log("로그인 페이지");
+  res.render('login.ejs');
+});
+//로그인 처리 요청
+app.post("/login", function(req, res){
+  console.log("아이디 :" + req.body.userid);
+  console.log("비밀번호 :" + req.body.userpw);
+
+ // 몽고디비에서 데이터 조회
+ mydb.collection("account").findOne({userid:req.body.userid}).then((result)=>{
+  //id가 db에 존지하지않을 경우 발생하는 오류 처리 로직 추가
+   if(!result){ // id에 해당하는 데이타가 없는 경우 null 처리
+      res.send("아이디가 존재하지 않습니다.");
+   }else if(result.userpw == req.body.userpw){ //id와 비번 둘다 맞는 경우
+    res.send("로그인 성공");
+   }else{
+    res.send("비밀번호가 일치하지 않습니다."); //id는 맞고, 비번이 틀린 겨우
+   }
+ });
+});

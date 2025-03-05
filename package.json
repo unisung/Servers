@@ -11,8 +11,10 @@
   "dependencies": {
     "board": "file:",
     "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
+    "express-session": "^1.18.1",
     "mongodb": "^5.9.2",
     "mysql2": "^3.12.0",
     "node-mysql": "^0.4.2"
