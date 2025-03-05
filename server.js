@@ -126,3 +126,8 @@ app.post("/delete", function(req, res){
     res.status(500).send(); //server error
   });
 });
+
+// '/content' 요청에 대한 처리 루틴
+app.get('/content', function(req, res){
+  res.render('content.ejs');
+});
