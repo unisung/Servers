@@ -143,3 +143,12 @@ app.get('/content/:id', function(req, res){
     console.log("조회실패", err);
   });
 });
+
+//수정페이지
+app.get("/edit/:id", function(req, res){
+   req.params.id = new ObjId(req.params.id);
+   mydb.collection("post").findOne({_id:req.params.id}).then((result)=>{
+     console.log("조회완료", result);
+     res.render('edit.ejs', {data:result});
+   });
+});
