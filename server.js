@@ -128,6 +128,18 @@ app.post("/delete", function(req, res){
 });
 
 // '/content' 요청에 대한 처리 루틴
-app.get('/content', function(req, res){
-  res.render('content.ejs');
+app.get('/content/:id', function(req, res){
+  // 파라미터로 전달된 id값 출력
+  console.log("id:", req.params.id);
+
+  //몽고디비의 _id값으로 id객체 생성하기
+  req.params.id = new ObjId(req.params.id);
+  //_id에 해당하는 내용 조회
+  mydb.collection("post").findOne({_id:req.params.id}).then((result)=>{
+    console.log("조회완료", result);
+    //ejs파일을 이용하여 데이터 전송
+    res.render('content.ejs', {data:result});
+  }).catch((err)=>{
+    console.log("조회실패", err);
+  });
 });
