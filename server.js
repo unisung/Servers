@@ -207,7 +207,8 @@ app.get('/session', function(req, res){
 app.get("/login", function(req, res){
   if(req.session.userid){
     console.log("세션 유지");
-    res.send("이미 로그인 되어있습니다.");
+    //res.send("이미 로그인 되어있습니다.");
+    res.render('index.ejs', {user : req.session.user});
   }else{
     res.render("login.ejs"); //로그인 페이지로 이동
   }
@@ -226,7 +227,8 @@ app.post("/login", function(req, res){
    }else if(result.userpw == req.body.userpw){ //id와 비번 둘다 맞는 경우
     req.session.userid = req.body; //세션에 로그인 정보 저장
     console.log('새로운 로그인')
-    res.send("로그인 되었습니다.");
+    //res.send("로그인 되었습니다.");
+    res.render('index.ejs', {user : req.session.user});
    }else{
     res.send("비밀번호가 일치하지 않습니다."); //id는 맞고, 비번이 틀린 겨우
    }
@@ -236,5 +238,6 @@ app.post("/login", function(req, res){
 app.get("/logout", function(req, res){
   console.log("로그아웃");
   req.session.destroy(); //세션 삭제
-  res.redirect("/"); //메인페이지로 이동 (index.ejs)
+  //res.redirect("/"); //메인페이지로 이동 (index.ejs)
+  res.render('index.ejs', {user:null});
 });
