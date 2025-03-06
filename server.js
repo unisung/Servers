@@ -171,7 +171,10 @@ app.post("/edit",function(req,res){
   req.body.id = new ObjId(req.body.id);
   mydb.collection("post").updateOne(
     {_id:req.body.id},
-    {$set:{title:req.body.title, content:req.body.content, date:req.body.someDate}}
+    {$set:{title:req.body.title, 
+           content:req.body.content, 
+           date:req.body.someDate,
+          path:imagepath}}
      ).then((result)=>{
     console.log("수정완료", result);
     res.redirect("/list"); //목록페이지로 이동
@@ -297,5 +300,7 @@ app.post('/signup',function(req,res){
     //몽고디비에서 데이터 조회
     mydb.collection("post").find({title:req.query.value}).toArray().then((result)=>{
       console.log(result);
+      //검색결과 페이지로 이동
+      res.render("sresult.ejs", {data:result});
      });
   });
