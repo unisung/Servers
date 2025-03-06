@@ -290,3 +290,12 @@ app.post('/signup',function(req,res){
     imagepath = '\\' + req.file.path; //이미지 경로 저장
     console.log("이미지 경로 : "+ imagepath);
   });
+
+  //검색요청 기능
+  app.get('/search', function(req, res){
+    console.log(req.query); // 127.0.0.1:8080/search?value=서시 로 넘어온 값,query속성에서 구함.
+    //몽고디비에서 데이터 조회
+    mydb.collection("post").find({title:req.query.value}).toArray().then((result)=>{
+      console.log(result);
+     });
+  });
