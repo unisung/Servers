@@ -1,14 +1,18 @@
+//환경 변수 설정
+const dotenv = require('dotenv').config();
+
 // 몽고디비 연결
 const mongoclient = require('mongodb').MongoClient;
 const ObjId = require('mongodb').ObjectId;
 
-const url = "mongodb+srv://admin:123@mycluster1.gzupq.mongodb.net/?retryWrites=true&w=majority&appName=Mycluster1";
+// process.env.환경변수명
+const url = process.env.DB_URL;
 
 let mydb; // 데이터베이스 객체 참조변수 선언
 
 mongoclient.connect(url).then((client)=>{
   mydb = client.db('myboard');
-  app.listen(8081, function(){
+  app.listen(process.env.PORT, function(){
     console.log("포트 번호 8081으로 서버 대기중 ... ")
   });
 }).catch((err)=>{
@@ -23,10 +27,10 @@ const sha = require('sha256');
 
 const conn = mysql2.createConnection({
 
-    host:"localhost",
-    user:"root",
-    password: "root",
-    database: "myboard"
+    host:process.env.HOST,
+    user:process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
 });
 
 conn.connect(function(err){
