@@ -264,3 +264,19 @@ app.post('/signup',function(req,res){
    });
    res.render('index.ejs', {user:null});
   });
+
+  let multer = require('multer');
+  let storage = multer.diskStorage({
+    destination : function(req,file, done){
+      done(null, './public/image')
+    },
+    filename : function(req, file, done){
+      done(null, file.originalname);
+    }
+  })
+  let upload = multer({storage:storage});
+
+  //이미지 업로드 처리
+  app.post('/photo', upload.single('picture'), function(req, res){
+    console.log("서버에 파일 첨부하기 : "+ req.file.path);
+  });
