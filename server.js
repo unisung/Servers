@@ -19,6 +19,7 @@ mongoclient.connect(url).then((client)=>{
 const express = require('express');
 const app = express();
 const mysql2 = require('mysql2');
+const sha = require('sha256');
 
 const conn = mysql2.createConnection({
 
@@ -56,7 +57,7 @@ app.get('/welcome', function(req, res){
 
 app.get('/', function(req, res){
     // res.sendFile(__dirname + '/index.html');
-    res.render('index.ejs');
+    res.render('index.ejs', {user:null});
 });
         
 //localhost:127.0.0.1:8080/list 요청에 대한 처리 루틴
@@ -224,7 +225,7 @@ app.post("/login", function(req, res){
   //id가 db에 존지하지않을 경우 발생하는 오류 처리 로직 추가
    if(!result){ // id에 해당하는 데이타가 없는 경우 null 처리
       res.send("아이디가 존재하지 않습니다.");
-   }else if(result.userpw == req.body.userpw){ //id와 비번 둘다 맞는 경우
+   }else if(result.userpw == sha(req.body.userpw)){ //id와 비번 둘다 맞는 경우
     req.session.userid = req.body; //세션에 로그인 정보 저장
     console.log('새로운 로그인')
     //res.send("로그인 되었습니다.");
@@ -241,3 +242,25 @@ app.get("/logout", function(req, res){
   //res.redirect("/"); //메인페이지로 이동 (index.ejs)
   res.render('index.ejs', {user:null});
 });
+
+//회원가입 폼페이지 요청
+app.get('/signup',function(req,res){
+  res.render('signup.ejs');
+});
+//회원가입 처리 요청
+app.post('/signup',function(req,res){
+  console.log(req.body.userid);
+  console.log(sha(req.body.userpw));
+  console.log(req.body.usergroup);
+  console.log(req.body.useremail);
+  //몽고디비에 데이터 저장
+  mydb.collection('account').insertOne({
+    userid:req.body.userid,
+    userpw:sha(req.body.userpw),
+    usergroup:req.body.usergroup,
+    useremail:req.body.useremail
+  }).then((result)=>{
+    console.log("저장완료-회원가입 성공", result);
+   });
+   res.render('index.ejs', {user:null});
+  });
