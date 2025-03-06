@@ -16,6 +16,7 @@
     </div>
     <div class="card-body">
       <p class="card-text"><%= data.content %></p>
+      <img src="<%= data.path.substring(6) %>" width="200" alt="사진"><p></p>
       <p class="card-subtitle mb-2 text-body-secondary"><%=data.date%></p>
       <a href="/edit/<%= data._id %>" class="card-link">수정하기</a>
     </div>

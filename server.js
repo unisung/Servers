@@ -85,10 +85,15 @@ app.get('/enter', function(req, res){
 app.post('/save',function(req,res){
   console.log(req.body.title); // 입력한 제목
   console.log(req.body.content);  // 입력한 내용
+  console.log("imagepath:"+imagepath); // 이미지 경로
   
   //MongoDB에 데이터 저장
 mydb.collection("post").insertOne(
-  {title:req.body.title, content: req.body.content, date:req.body.someDate}
+  {title:req.body.title, 
+    content: req.body.content, 
+    date:req.body.someDate,
+    path:imagepath
+  }
 ).then((result)=>{
   console.log("저장완료", result);
 });
@@ -276,7 +281,12 @@ app.post('/signup',function(req,res){
   })
   let upload = multer({storage:storage});
 
+  //이미지 경로 저장 변수
+  let imagepath = '';
+
   //이미지 업로드 처리
   app.post('/photo', upload.single('picture'), function(req, res){
     console.log("서버에 파일 첨부하기 : "+ req.file.path);
+    imagepath = '\\' + req.file.path; //이미지 경로 저장
+    console.log("이미지 경로 : "+ imagepath);
   });
