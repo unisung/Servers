@@ -10,8 +10,22 @@ const app = express();
 const mysql2 = require('mysql2');
 const sha = require('sha256');
 
+app.set('view engine', 'ejs'); //ejs 뷰 엔진 사용
+
+
+//body-parser 라이브러리(미들웨어) 추가
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json()); //json 형식의 데이터를 받기 위한 설정
+//정적파일(css, js, image) 위치 설정 -> 아래 설정 후static 폴더 생성하기
+app.use(express.static('public'));
+
+
 //라우터 추가
 app.use('/', require('./routes/post.js'));
+app.use('/', require('./routes/add.js'));
+//app.use('/', require('./routes/auth.js'));
+
 
 // process.env.환경변수명
 const url = process.env.DB_URL;
@@ -45,15 +59,7 @@ conn.connect(function(err){
     console.log("접속 성공");
 });
 
-//body-parser 라이브러리(미들웨어) 추가
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json()); //json 형식의 데이터를 받기 위한 설정
 
-app.set('view engine', 'ejs'); //ejs 뷰 엔진 사용
-
-//정적파일(css, js, image) 위치 설정 -> 아래 설정 후static 폴더 생성하기
-app.use(express.static('public'));
 
 app.get('/book', function(req, res){
     res.send('도서 목록 관련 페이지입니다.');
@@ -70,46 +76,6 @@ app.get('/', function(req, res){
         
 
 
-// localhost:8080/enter 요청에 대한 처리 루틴
-app.get('/enter', function(req, res){
-  // res.sendFile(__dirname + '/enter.html');
-  res.render('enter.ejs');
-});
-
-// localhost:8080/save 요청에 대한 처리 루틴
-app.post('/save',function(req,res){
-  console.log(req.body.title); // 입력한 제목
-  console.log(req.body.content);  // 입력한 내용
-  console.log("imagepath:"+imagepath); // 이미지 경로
-  
-  //MongoDB에 데이터 저장
-mydb.collection("post").insertOne(
-  {title:req.body.title, 
-    content: req.body.content, 
-    date:req.body.someDate,
-    path:imagepath
-  }
-).then((result)=>{
-  console.log("저장완료", result);
-});
-
-
-  // //sql문 작성
-  // let sql = "insert into post(title, content, created) values(?, ?, now())";
-  // //바인딩변수 값 설정
-  // let params = [req.body.title, req.body.content];
-  // //쿼리 실행
-  // conn.query(sql, params, function(err, result){
-  //   if(err) throw err; //에러 발생시 예외객체 생성
-  //   console.log("저장완료", result);
-
-
-    //결과를 클라이언트에게 응답
-    // res.send("데이타 추가 성공");
-    res.redirect("/list"); //목록페이지로 이동
-    
-
-});
 
 //const ObjId = require('mongodb').ObjectId; 
 
@@ -151,6 +117,9 @@ app.get('/content/:id', function(req, res){
     console.log("조회실패", err);
   });
 });
+
+//이미지 경로 저장 변수
+let imagepath = '';
 
 //수정페이지
 app.get("/edit/:id", function(req, res){
@@ -268,26 +237,6 @@ app.post('/signup',function(req,res){
    res.render('index.ejs', {user:null});
   });
 
-  let multer = require('multer');
-  let storage = multer.diskStorage({
-    destination : function(req,file, done){
-      done(null, './public/image')
-    },
-    filename : function(req, file, done){
-      done(null, file.originalname);
-    }
-  })
-  let upload = multer({storage:storage});
-
-  //이미지 경로 저장 변수
-  let imagepath = '';
-
-  //이미지 업로드 처리
-  app.post('/photo', upload.single('picture'), function(req, res){
-    console.log("서버에 파일 첨부하기 : "+ req.file.path);
-    imagepath = '\\' + req.file.path; //이미지 경로 저장
-    console.log("이미지 경로 : "+ imagepath);
-  });
 
   //검색요청 기능
   app.get('/search', function(req, res){
